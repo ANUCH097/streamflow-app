@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STREAMLINE - Song App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #181818;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #1db954;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #232323;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        .song-list {
+            list-style: none;
+            padding: 0;
+        }
+        .song-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+        }
+        .song-title {
+            flex: 1;
+        }
+        button {
+            background: #1db954;
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #17a44b;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .add-song-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .add-song-form input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>STREAMLINE</header>
+    <div class="container">
+        <form class="add-song-form" id="addSongForm">
+            <input type="text" id="songTitle" placeholder="Song Title" required>
+            <input type="url" id="songUrl" placeholder="Song URL (mp3)" required>
+            <button type="submit">Add Song</button>
+        </form>
+        <ul class="song-list" id="songList"></ul>
+        <audio id="audioPlayer" controls></audio>
+    </div>
+    <script>
+        // Sample songs
+        const songs = [
+            {
+                title: "Sample Song 1",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            },
+            {
+                title: "Sample Song 2",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            }
+        ];
+
+        const songList = document.getElementById('songList');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const addSongForm = document.getElementById('addSongForm');
+        const songTitleInput = document.getElementById('songTitle');
+        const songUrlInput = document.getElementById('songUrl');
+
+        function renderSongs() {
+            songList.innerHTML = '';
+            songs.forEach((song, idx) => {
+                const li = document.createElement('li');
+                li.className = 'song-item';
+                li.innerHTML = `
+                    <span class="song-title">${song.title}</span>
+                    <button onclick="playSong(${idx})">Play</button>
+                `;
+                songList.appendChild(li);
+            });
+        }
+
+        window.playSong = function(idx) {
+            audioPlayer.src = songs[idx].url;
+            audioPlayer.play();
+        };
+
+        addSongForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = songTitleInput.value.trim();
+            const url = songUrlInput.value.trim();
+            if (title && url) {
+                songs.push({ title, url });
+                renderSongs();
+                songTitleInput.value = '';
+                songUrlInput.value = '';
+            }
+        });
+
+        // Initial render
+        renderSongs();
+    </script>
+</body>
+</html>
